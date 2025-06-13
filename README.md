@@ -63,16 +63,24 @@ The first time I saw the painting, the connection with Pac-man was more immediat
 ![Donkey Kong](assets/donkey-kong-game-card.png) 
 <br>
 Donkey Kong
+<br>
+<br>
+<br>
+
 
 ![Super Mario Bros ](assets/Super-Mario-Bros.jpg) 
 <br>
 Super Mario Bros Mini
-
+<br>
+<br>
+<br>
 
 ![pac-man](assets/Pac-Man.png) 
 <br>
 Pac-MAn
-
+<br>
+<br>
+<br>
 
 ## :wrench: Technical Explanation
 
