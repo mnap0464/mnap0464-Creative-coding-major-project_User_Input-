@@ -10,6 +10,7 @@
 - [Animation Approach](#mag-animation-approach)
 - [Technical Explanation](#wrench-technical-explanation)
 - [References](#pushpin-references)
+- [Acknowledgments AI](#robot-acknowledgments-ai)
 
 <br>
 <br>
@@ -135,3 +136,18 @@ If these conditions are met and the player is not actively jumping upwards (!jum
 > - [Tech Head Online](#https://www.youtube.com/watch?v=enLvg0VTsAo)
 >
 ><br>
+
+## :robot: Acknowledgments AI
+
+ I acknowledge the use of the Ai tools Gemini to help make some parts of the code work.
+<br>
+
+![1](assets/magnet_problem.png) 
+<br>
+<br>
+
+![2](assets/window_resize.png)
+<br>
+<br>
+
+![3](assets/mosaic.png)
