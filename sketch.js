@@ -747,3 +747,31 @@ function gravity(){
     playerX = playerWidth/2; // Snap player to the left edge (unscaled)
 }
 }
+
+
+
+
+//Reference
+//To create this code several video tutorials were watched 
+//most of them are in series of more that 2 part.
+
+// first 5 video made by: Tech Head Online
+// 1 https://www.youtube.com/watch?v=enLvg0VTsAo
+// 2 https://www.youtube.com/watch?v=waF0_y7XheQ&list=PLoHS9P-kC-252Pd9MJD_ItfaVuYV2kTCE&index=23
+// 3 https://www.youtube.com/watch?v=5aHBK7Yw8xs&list=PLoHS9P-kC-252Pd9MJD_ItfaVuYV2kTCE&index=24
+// 4 https://www.youtube.com/watch?v=CuC4sZ5p3Hw&list=PLoHS9P-kC-252Pd9MJD_ItfaVuYV2kTCE&index=25
+// 5 https://www.youtube.com/watch?v=IHBqtJGJDXU&list=PLoHS9P-kC-252Pd9MJD_ItfaVuYV2kTCE&index=26
+
+// second serie of video by: Jason Erdreich
+// 1 https://www.youtube.com/watch?v=FZlpuQeCvlk&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=1
+// 2 https://www.youtube.com/watch?v=8Cqtoo2Fq-s&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=2
+// 3 https://www.youtube.com/watch?v=StoBCNiQakM&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=3
+// 4 https://www.youtube.com/watch?v=qprwX-FMdSY&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=4
+// 5 https://www.youtube.com/watch?v=mPKSkbnQzjc&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=5
+// 6 https://www.youtube.com/watch?v=VnRqA1v10w8&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=6
+// 7 https://www.youtube.com/watch?v=3Gl6cvfEFyk&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=7
+// 8 https://www.youtube.com/watch?v=L-aTxyWmaTU&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=8
+
+//p5.js projects:
+// https://editor.p5js.org/L0808866/sketches/lvURvk4QN
+// https://editor.p5js.org/GWCEducation/sketches/Kfqp0lql9
