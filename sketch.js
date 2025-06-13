@@ -1,10 +1,11 @@
 //backgroung image variable
-let img;
-let sacry;
-let numSegments = 200;
+let img;  // Original background mosaic image
+let sacry;  // Declare the scary image
+let numSegments = 200;  // How many pieces the image is divided into.
 let segments = [];
 let drawSegments = true;
-let imgDrwPrps = {aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0};
+let imgDrwPrps = {aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0}; // These properties help 
+//make sure your background image always looks good, no matter the screen size.
 let canvasAspectRatio = 0;
 
 // CHANGE: Added reference dimensions and scaling factors
@@ -14,6 +15,10 @@ let scaleX; // Scaling factor for horizontal elements
 let scaleY; // Scaling factor for vertical elements
 
 //variables for "scary" mosaic effect
+  /**
+ * The following lines were taken from Gemini. I require to solve the 
+ * problem of the changing background when the enemy hit the player.
+ */
 let showScaryMosaic = false;
 let scaryMosaicTimer = 0;
 const SCARY_MOSAIC_DURATION = 30; // those are the frames.
@@ -203,7 +208,8 @@ function setup() {
 
   imgDrwPrps.aspect = img.width / img.height;
   calculateImageDrawProps(); // Calculates properties for background image based on current window size
-
+  // The segment creation loop should use the *original* 'img' for initial setup.
+  // The dynamically change which image is used later.
   // Initialize mosaic segments
   let segmentWidth = img.width / numSegments;
   let segmentHeight = img.height / numSegments;
@@ -456,7 +462,7 @@ function splash(){
   strokeWeight(5 * scaleX);
   textFont (pressStart);
   textAlign(CENTER);
-  text("JHONNYYYYYY", width/2, height/2);
+  text("Jazz dream", width/2, height/2);
 }
 
 
@@ -502,6 +508,12 @@ function mousePressed() {
   }
 }
 
+
+
+/**
+ * The following lines were taken from Gemini. I require to help me whit the 
+ * windowReaized, not just of the window but of the general game. 
+ */
 
 // Window resized event handler
 function windowResized() {
@@ -571,6 +583,11 @@ class ImageSegment {
 
 // Main game logic function
 function game (){
+  /**
+ * The following lines were taken from Gemini. I require to solve the 
+ * "magnet" problem. because the player couldnt left the platform, he was 
+ * magnet stuck on them..
+ */
   const platformsArray = [
     {x: platform1X, y: platform1Y},
     {x: platform2X, y: platform2Y},
