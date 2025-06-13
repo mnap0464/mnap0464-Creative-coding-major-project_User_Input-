@@ -44,4 +44,4 @@
 > <br>
 > 
 
-## :pacman: References
+## :pac_man: References
