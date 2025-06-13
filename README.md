@@ -6,7 +6,6 @@
 > 
 > <br>
 > 
-
 >This project merges two worlds, the **pictorial** and the **videogame** one. The starting pictorial work is ***Broadway Boogie Woogie*** (1942-43) by **Piet Mondrian**, a painting in which the author expresses the fascination and **emotions** he felt towards the jazz music he encountered in New York.
 > 
 > <br>
@@ -20,7 +19,6 @@
 > 
 > <br>
 > 
-
 >Once the main screen with the name of the game is loaded **press on the screen to start the game**. 
 > 
 > <br>
