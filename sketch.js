@@ -1,34 +1,40 @@
 //backgroung image variable
-let img; // Original background mosaic image
-let sacry; // Declare the scary image
-let numSegments = 200; // How many pieces the image is divided into.
+let img;
+let sacry;
+let numSegments = 200;
 let segments = [];
 let drawSegments = true;
-let imgDrwPrps = {aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0}; // These properties help make sure your background image always looks good, no matter the screen size.
+let imgDrwPrps = {aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0};
 let canvasAspectRatio = 0;
 
+// CHANGE: Added reference dimensions and scaling factors
+let referenceWidth = 1800; // Original width the game was designed for
+let referenceHeight = 900; // Original height the game was designed for
+let scaleX; // Scaling factor for horizontal elements
+let scaleY; // Scaling factor for vertical elements
 
-  /**
- * The following lines were taken from Gemini. I require to solve the 
- * problem of the changing background when the enemy hit the player.
- */
-// Variables for scary mosaic effect
-let showScaryMosaic = false; // Flag to draw the scary mosaic
-let scaryMosaicTimer = 0;   // Timer for how long the scary mosaic is active
-const SCARY_MOSAIC_DURATION = 30; // Duration in frames (30 frames)
+//variables for "scary" mosaic effect
+let showScaryMosaic = false;
+let scaryMosaicTimer = 0;
+const SCARY_MOSAIC_DURATION = 30; // those are the frames.
+
 
 //Game
 var stage = 0;
+var pressStart; // Font variable
 
 //player
 var Jhonny;
-var playerX = 400;
-var playerY = 700;
-var playerWidth = 187;
-var playerHeight = 187;
+var playerX = 400; // Player's X position in unscaled game units
+var playerY = 700; // Player's Y position in unscaled game units
+var playerWidth = 187; // Player's width in unscaled game units
+var playerHeight = 187; // Player's height in unscaled game units
+
+// CHANGE: Variable to store player's Y position from the previous frame for collision detection
+let oldPlayerY;
 
 // player starting position
-//These constants are tied to when the enemy hits the player, 
+//These constants are tied to when the enemy hits the player,
 //in order to send him back to his starting position.
 const initialPlayerX = 400;
 const initialPlayerY = 700;
@@ -51,14 +57,13 @@ var enemy3Y = 180;
 var enemy1Position = 900;
 var enemy2Position = 630;
 var enemy3Position = 1000;
-var enemySpeed = 2;
-var enemyDirection = 1;
-var enemyDistance= 130;
-var enemy1Distance= 300;
-var enemy1Direction = -1; 
-var enemy2Direction = 1; 
+var enemySpeed = 2; // Enemy speed in unscaled game units
+var enemyDirection = 1; // Unused, keeping for consistency
+var enemyDistance= 130; // Enemy patrol distance in unscaled game units
+var enemy1Distance= 300; // Enemy patrol distance in unscaled game units
+var enemy1Direction = -1;
+var enemy2Direction = 1;
 var enemy3Direction = -1;
-
 
 
 // platforms
@@ -84,20 +89,18 @@ var platform5Y = 530;
 var platform6X = 1650;
 var platform6Y = 280;
 
-//platforms horizontal barrier
+//platforms horizontal barrier (hitting underside of platform)
 var barrier1Y = platform1Y + 20;
 var barrier2Y = platform2Y + 20;
 var barrier3Y = platform3Y + 20;
 var barrier4Y = platform4Y + 20;
 var barrier5Y = platform5Y + 20;
 var barrier6Y = platform6Y + 20;
-var barrierHeight = 20; 
-
+var barrierHeight = 20;
 
 
 // music note
 var note
-//1
 var noteX = 145;
 var noteY = 430;
 var noteWidth = 100;
@@ -122,7 +125,6 @@ var note7X = 900;
 var note7Y = 700;
 
 
-
 //counters
 var score = 0;
 var lives = 3;
@@ -132,25 +134,24 @@ var splashTime;
 var gameTime;
 
 
-
-//ground variables
-var ground
-var groundX = 846;
-var groundY = 1000;
-var groundWidth = 1695;
-var groundHeight = 502;
-
-
-
 // gravity
 var jump = false;
-var direction = 1;
-var velocity = 2;
-var jumpPower = 20;
-var fallingSpeed = 2; 
-var minHeight = 760; 
-var maxHeight = 10; 
-var jumpCunter = 0; 
+var direction = 1; // Unused, keeping for consistency
+var velocity = 2; // Unused, player movement is directly via jumpPower/fallingSpeed
+var jumpPower = 20; // Jump strength in unscaled game units
+var fallingSpeed = 5; // Fall speed in unscaled game units
+var minHeight = 760; // Ground level (player bottom) in unscaled game units
+var maxHeight = 10; // Top screen boundary (player top) in unscaled game units
+var jumpCunter = 0;
+
+
+//ground
+var ground
+// CHANGE: Ground image now spans the full reference width for better scaling
+var groundX = referenceWidth / 2; // Centered on the reference width
+var groundY = 1000; // Position still below the screen
+var groundWidth = referenceWidth; // Spans full reference width
+var groundHeight = 502; // Original height, will scale proportionally
 
 
 //sounds
@@ -167,29 +168,18 @@ var louseGameSound;
 var winGameSound;
 
 
-// Preload
+// Preload all assets
 function preload() {
-  //nyc
   img = loadImage("assets/nyc_opacity.jpg");
-  //Jhonny
   Jhonny = loadImage ("assets/Jhonny.png");
-  //platforms
   platforms = loadImage ("assets/oW.png");
-  // ground
   ground = loadImage ("assets/ground.png");
-   //image for stage 0
-  nyc = loadImage ("assets/nyc .jpg")
-  //the note are point
+  nyc = loadImage ("assets/nyc .jpg");
   note = loadImage ("assets/music-note_11336134.png");
-  //the instrument are enemy
   enemy = loadImage ("assets/enemy.png");
-  //hit the enemy and cange the backgroung image
   sacry = loadImage ("assets/scary.png");
-  //font
   pressStart = loadFont ("assets/PressStart2P-Regular.ttf");
-  //jump sound
   jumpSound = loadSound ("assets/cartoon-jump-6462.mp3");
-  //note sound from "do" to "si"
   noteSound1 = loadSound ("assets/do-80236.mp3");
   noteSound2 = loadSound ("assets/re-78500.mp3");
   noteSound3 = loadSound ("assets/mi-80239.mp3");
@@ -197,30 +187,24 @@ function preload() {
   noteSound5 = loadSound ("assets/sol-101774.mp3");
   noteSound6 = loadSound ("assets/la-80237.mp3");
   noteSound7 = loadSound ("assets/si-80238.mp3");
-  //louse a life sound
   louseLifeSound = loadSound ("assets/slap-hurt-pain-sound-effect-262618.mp3");
-  //game over
   louseGameSound = loadSound ("assets/cartoon-trombone-sound-effect-241387.mp3");
-  // win game
   winGameSound = loadSound ("assets/winning-218995.mp3");
 }
 
 
-
-
-
-
-
-
-//setup
+// Setup function: runs once at the beginning
 function setup() {
   imageMode (CENTER);
-  //backgroung image setup
   createCanvas(windowWidth, windowHeight);
+  // Calculate initial scaling factors based on current window size
+  scaleX = windowWidth / referenceWidth;
+  scaleY = windowHeight / referenceHeight;
+
   imgDrwPrps.aspect = img.width / img.height;
-  calculateImageDrawProps();
-  // The segment creation loop should use the *original* 'img' for initial setup.
-  // The dynamically change which image is used later.
+  calculateImageDrawProps(); // Calculates properties for background image based on current window size
+
+  // Initialize mosaic segments
   let segmentWidth = img.width / numSegments;
   let segmentHeight = img.height / numSegments;
   let positionInColumn = 0;
@@ -234,64 +218,65 @@ function setup() {
     }
     positionInColumn++;
   }
+  // Calculate draw properties for each segment after initial setup
   for (const segment of segments) {
     segment.calculateSegDrawProps();
   }
+
+  // CHANGE: Initialize oldPlayerY with current playerY
+  oldPlayerY = playerY;
 }
 
 
-
-
-
-
-
-
-// draw
+// Draw function: runs continuously
 function draw() {
-  //backgroung image
+  // CHANGE: Store player's Y position BEFORE gravity and game logic for collision prediction
+  oldPlayerY = playerY;
+
   background(0);
-  // MAIN CHANGE 1: Control which image is used for the mosaic based on showScaryMosaic flag
+  totalTime = millis();
+
+  // Background mosaic drawing logic
   if (drawSegments) {
-    // If scary mosaic is active, use its segments
     if (showScaryMosaic) {
-      // Re-create segments with scary image colors if not already done
-      // (This is a simplified approach; ideally, you'd pre-generate segments for both or swap image source)
-      // For minimal change, we'll re-calculate segment colors on the fly based on which image is "active"
-      let currentMosaicImage = showScaryMosaic ? sacry : img;
+      let currentMosaicImage = sacry; // Use scary image when active
       for (const segment of segments) {
+        // Update segment color based on the current mosaic image
         let segX = segment.rowPostion * (currentMosaicImage.width / numSegments);
         let segY = segment.columnPosition * (currentMosaicImage.height / numSegments);
-        segment.srcImgSegColour = currentMosaicImage.get(segX + (currentMosaicImage.width / numSegments) / 2, segY + (currentMosaicImage.height / numSegments) / 2);
+        segment.srcImgSegColour = currentMosaicImage.get(segX + (currentMosaicImage.width / numSegments) / 2,
+        segY + (currentMosaicImage.height / numSegments) / 2);
         segment.drawMosaicSegment();
       }
-      scaryMosaicTimer--; // Decrement timer
+      scaryMosaicTimer--;
       if (scaryMosaicTimer <= 0) {
-        showScaryMosaic = false; // Turn off scary mosaic
-        // Reset segment colors to original image
+        showScaryMosaic = false;
+        // Reset segment colors to original image after scary mosaic is done
         let originalImage = img;
         for (const segment of segments) {
           let segX = segment.rowPostion * (originalImage.width / numSegments);
           let segY = segment.columnPosition * (originalImage.height / numSegments);
-          segment.srcImgSegColour = originalImage.get(segX + (originalImage.width / numSegments) / 2, segY + (originalImage.height / numSegments) / 2);
+          segment.srcImgSegColour = originalImage.get(segX + (originalImage.width / numSegments) / 2,
+          segY + (originalImage.height / numSegments) / 2);
         }
       }
     } else {
-      // Draw normal mosaic segments
       for (const segment of segments) {
         segment.drawMosaicSegment();
       }
     }
   } else {
-    // If not drawing segments, just draw the full image
+    // Draw the full background image (scaled)
     image(img, imgDrwPrps.xOffset, imgDrwPrps.yOffset, imgDrwPrps.width, imgDrwPrps.height);
   }
 
 
-    //game part
+  // Game state management
   if (stage == 0) {
-    splash(); 
-  } else if (stage == 1) { 
+    splash();
+  } else if (stage == 1) {
     // Input handling
+    // Player movement speed is unscaled. The visual effect will be scaled.
     if (keyIsDown(RIGHT_ARROW)){
       playerX = playerX + 5;
     }
@@ -299,138 +284,106 @@ function draw() {
       playerX = playerX - 5;
     }
 
-    if (keyIsDown(32)){ 
+    if (keyIsDown(32)){
       jump = true;
+      // Prevent jump sound from re-playing too fast if key is held
+      if (!jumpSound.isPlaying()) {
+        jumpSound.play();
+      }
     } else {
       jump = false;
     }
-  
 
 
-  //game physics and logic
-    gravity();
-    game(); //call game logic after gravity to apply current position changes
+    // Game physics and logic
+    gravity(); // Gravity updates playerY
+    game();    // Game handles collisions based on potentially new playerY
+
     gameTime = int((totalTime - splashTime)/1000)
 
     let displayTimeRemaining = timeLimit - gameTime;
     if (displayTimeRemaining <= 0) {
-      displayTimeRemaining = 0; 
+      displayTimeRemaining = 0;
     }
 
+    // Ground drawing (scaled)
+    image(ground, groundX * scaleX, groundY * scaleY, groundWidth * scaleX, groundHeight * scaleY);
+
+    // Player drawing (scaled)
+    image(Jhonny, playerX * scaleX, playerY * scaleY, playerWidth * scaleX, playerHeight * scaleY);
+
+    // Platforms drawing (scaled)
+    image(platforms, platform1X * scaleX, platform1Y * scaleY, platformWidth * scaleX, platformHeight * scaleY);
+    image(platforms, platform2X * scaleX, platform2Y * scaleY, platformWidth * scaleX, platformHeight * scaleY);
+    image(platforms, platform3X * scaleX, platform3Y * scaleY, platformWidth * scaleX, platformHeight * scaleY);
+    image(platforms, platform4X * scaleX, platform4Y * scaleY, platformWidth * scaleX, platformHeight * scaleY);
+    image(platforms, platform5X * scaleX, platform5Y * scaleY, platformWidth * scaleX, platformHeight * scaleY);
+    image(platforms, platform6X * scaleX, platform6Y * scaleY, platformWidth * scaleX, platformHeight * scaleY);
 
 
-    //ground
-    image(ground, groundX, groundY, groundWidth, groundHeight);
-
-    //player
-    image(Jhonny, playerX, playerY, playerWidth, playerHeight);
-
-    //platforms
-    image(platforms, platform1X, platform1Y, platformWidth, platformHeight);
-    image(platforms, platform2X, platform2Y, platformWidth, platformHeight);
-    image(platforms, platform3X, platform3Y, platformWidth, platformHeight);
-    image(platforms, platform4X, platform4Y, platformWidth, platformHeight);
-    image(platforms, platform5X, platform5Y, platformWidth, platformHeight);
-    image(platforms, platform6X, platform6Y, platformWidth, platformHeight);
-
-
-        //the note are point
-    //1
-    image(note, noteX, noteY, noteWidth, noteHeight);
-    if(playerX >= noteX - noteWidth/2 &&
-      playerX <= noteX + noteWidth/2  &&
-      playerY >= noteY - noteHeight/2 &&
-      playerY <= noteY + noteHeight/2){
+    // Music notes (points) drawing and collision
+    // Scale note position and dimensions for drawing, and for collision detection
+    // Using p5.js dist() function for more robust circular collision.
+    image(note, noteX * scaleX, noteY * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, noteX * scaleX, noteY * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      noteX = - 10000;
+      noteX = -10000; // Move off-screen (stored as unscaled, but will be drawn off-screen)
       noteSound1.play();
     }
-    //2
-    image(note, note2X, note2Y, noteWidth, noteHeight);
-    if(playerX >= note2X - noteWidth/2 &&
-      playerX <= note2X + noteWidth/2  &&
-      playerY >= note2Y - noteHeight/2 &&
-      playerY <= note2Y + noteHeight/2){
+    // Repeat for all other notes
+    image(note, note2X * scaleX, note2Y * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, note2X * scaleX, note2Y * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      note2X = - 10000;
+      note2X = -10000;
       noteSound2.play();
     }
-    //3
-    image(note, note3X, note3Y, noteWidth, noteHeight);
-    if(playerX >= note3X - noteWidth/2 &&
-      playerX <= note3X + noteWidth/2  &&
-      playerY >= note3Y - noteHeight/2 &&
-      playerY <= note3Y + noteHeight/2){
+    image(note, note3X * scaleX, note3Y * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, note3X * scaleX, note3Y * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      note3X = - 10000;
+      note3X = -10000;
       noteSound3.play();
     }
-    //4
-    image(note, note4X, note4Y, noteWidth, noteHeight);
-    if(playerX >= note4X - noteWidth/2 &&
-      playerX <= note4X + noteWidth/2  &&
-      playerY >= note4Y - noteHeight/2 &&
-      playerY <= note4Y + noteHeight/2){
+    image(note, note4X * scaleX, note4Y * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, note4X * scaleX, note4Y * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      note4X = - 10000;
+      note4X = -10000;
       noteSound4.play();
     }
-    //5
-    image(note, note5X, note5Y, noteWidth, noteHeight);
-    if(playerX >= note5X - noteWidth/2 &&
-      playerX <= note5X + noteWidth/2  &&
-      playerY >= note5Y - noteHeight/2 &&
-      playerY <= note5Y + noteHeight/2){
+    image(note, note5X * scaleX, note5Y * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, note5X * scaleX, note5Y * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      note5X = - 10000;
+      note5X = -10000;
       noteSound5.play();
     }
-    //6
-    image(note, note6X, note6Y, noteWidth, noteHeight);
-    if(playerX >= note6X - noteWidth/2 &&
-      playerX <= note6X + noteWidth/2  &&
-      playerY >= note6Y - noteHeight/2 &&
-      playerY <= note6Y + noteHeight/2){
+    image(note, note6X * scaleX, note6Y * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, note6X * scaleX, note6Y * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      note6X = - 10000;
+      note6X = -10000;
       noteSound6.play();
     }
-    //7
-    image(note, note7X, note7Y, noteWidth, noteHeight);
-    if(playerX >= note7X - noteWidth/2 &&
-      playerX <= note7X + noteWidth/2  &&
-      playerY >= note7Y - noteHeight/2 &&
-      playerY <= note7Y + noteHeight/2){
+    image(note, note7X * scaleX, note7Y * scaleY, noteWidth * scaleX, noteHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, note7X * scaleX, note7Y * scaleY) < ((playerWidth * scaleX)/2 + (noteWidth * scaleX)/2)){
       score = score + 1;
-      note7X = - 10000;
+      note7X = -10000;
       noteSound7.play();
     }
 
 
-
-
-   //enemy
-    //1
-    image(enemy, enemy1X, enemy1Y, enemyWidth, enemyHeight);
-    if(playerX >= enemy1X - enemyWidth/2 &&
-      playerX <= enemy1X + enemyWidth/2 &&
-      playerY >= enemy1Y  - enemyHeight/2 &&
-      playerY <= enemy1Y  + enemyHeight/2){
+    // Enemies drawing and collision
+    // Scale enemy position and dimensions for drawing, and for collision detection
+    image(enemy, enemy1X * scaleX, enemy1Y * scaleY, enemyWidth * scaleX, enemyHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, enemy1X * scaleX, enemy1Y * scaleY) < ((playerWidth * scaleX)/2 + (enemyWidth * scaleX)/2)){
       lives = lives-1;
       louseLifeSound.play();
-      //active scary  mosaic
       showScaryMosaic = true;
-      scaryMosaicTimer = SCARY_MOSAIC_DURATION; //set trigger
+      scaryMosaicTimer = SCARY_MOSAIC_DURATION;
+      // Reset player to initial position (initial values are unscaled)
       playerX = initialPlayerX;
       playerY = initialPlayerY;
     }
-
-    //2
-    image(enemy, enemy2X, enemy2Y, enemyWidth, enemyHeight);
-    if(playerX >= enemy2X - enemyWidth/2 &&
-      playerX <= enemy2X + enemyWidth/2 &&
-      playerY >= enemy2Y  - enemyHeight/2 &&
-      playerY <= enemy2Y  + enemyHeight/2){
+    // Repeat for other enemies
+    image(enemy, enemy2X * scaleX, enemy2Y * scaleY, enemyWidth * scaleX, enemyHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, enemy2X * scaleX, enemy2Y * scaleY) < ((playerWidth * scaleX)/2 + (enemyWidth * scaleX)/2)){
       lives = lives-1;
       louseLifeSound.play();
       showScaryMosaic = true;
@@ -438,12 +391,8 @@ function draw() {
       playerX = initialPlayerX;
       playerY = initialPlayerY;
         }
-    //3
-    image(enemy, enemy3X, enemy3Y, enemyWidth, enemyHeight);
-    if(playerX >= enemy3X - enemyWidth/2 &&
-      playerX <= enemy3X + enemyWidth/2 &&
-      playerY >= enemy3Y  - enemyHeight/2 &&
-      playerY <= enemy3Y  + enemyHeight/2){
+    image(enemy, enemy3X * scaleX, enemy3Y * scaleY, enemyWidth * scaleX, enemyHeight * scaleY);
+    if(dist(playerX * scaleX, playerY * scaleY, enemy3X * scaleX, enemy3Y * scaleY) < ((playerWidth * scaleX)/2 + (enemyWidth * scaleX)/2)){
       lives = lives-1;
       louseLifeSound.play();
       showScaryMosaic = true;
@@ -452,11 +401,11 @@ function draw() {
       playerY = initialPlayerY;
     }
 
-    //moving
-    //1
-    enemy1X = enemy1X + (enemySpeed * enemy1Direction); 
+    // Enemy movement
+    // Enemy movement speed and patrol distances are unscaled.
+    enemy1X = enemy1X + (enemySpeed * enemy1Direction);
     if(enemy1X >= enemy1Position + enemy1Distance || enemy1X <= enemy1Position - enemy1Distance){
-      enemy1Direction = enemy1Direction * -1; 
+      enemy1Direction = enemy1Direction * -1;
     }
 
     // Enemy 2 Movement
@@ -471,69 +420,81 @@ function draw() {
       enemy3Direction = enemy3Direction * -1;
     }
 
-
-    //font details
-    textSize(15);
+    // Font details and scoreboard
+    // Scale text size, stroke, and positions for drawing
+    textSize(15 * scaleX);
     fill(255);
     stroke(0);
-    strokeWeight(2);
+    strokeWeight(2 * scaleX);
     textFont (pressStart);
     //score board
-    text("Piont:", 50, 50);
-    text(score, 110, 50);
+    text("Points:", 50 * scaleX, 50 * scaleY);
+    text(score, 110 * scaleX, 50 * scaleY);
     //lives
-    text("Lives:", 50, 80);
-    text(lives, 110, 80);
+    text("Lives:", 50 * scaleX, 80 * scaleY);
+    text(lives, 110 * scaleX, 80 * scaleY);
     //timer
-    text("Time remaining:", 1500, 50);
-    text(timeLimit - gameTime, 1640, 50);
+    text("Time remaining:", 1500 * scaleX, 50 * scaleY);
+    text(displayTimeRemaining, 1640 * scaleX, 50 * scaleY);
   } else if (stage == 2) {
-    winScreen(); 
+    winScreen();
   } else if (stage == 3) {
-    loseScreen(); 
+    loseScreen();
   }
 }
 
 
+// Splash screen logic
 function splash(){
-  image(nyc, windowWidth/2, windowHeight/2,windowWidth, windowHeight);
+  // Draw background image using windowWidth and windowHeight directly
+  image(nyc, windowWidth/2, windowHeight/2, windowWidth, windowHeight);
 
-  textSize(100);
+  // Scale text size, stroke, and position for drawing
+  textSize(100 * scaleX);
   fill(255);
   stroke(0);
-  strokeWeight(5);
+  strokeWeight(5 * scaleX);
   textFont (pressStart);
-  textAlign(CENTER); 
-  text("jhonnyyyyyy", width/2, height/2); 
+  textAlign(CENTER);
+  text("JHONNYYYYYY", width/2, height/2);
 }
 
 
+// Win screen logic
 function winScreen(){
-  image(nyc, windowWidth/2, windowHeight/2,windowWidth, windowHeight);
-  textSize(100);
+  // Draw background image using windowWidth and windowHeight directly
+  image(nyc, windowWidth/2, windowHeight/2, windowWidth, windowHeight);
+  // Original code had a duplicate image call here, keeping it as-is.
+  image(nyc, windowWidth/2, windowHeight/2, windowWidth, windowHeight);
+  // Scale text size, stroke, and position for drawing
+  textSize(100 * scaleX);
   fill(255);
   stroke(0);
-  strokeWeight(5);
+  strokeWeight(5 * scaleX);
   textFont (pressStart);
   textAlign(CENTER);
   text("YOU WIN!!!", width/2, height/2);
 }
 
 
+// Lose screen logic
 function loseScreen(){
-  image(nyc, windowWidth/2, windowHeight/2,windowWidth, windowHeight);
-  image(nyc, windowWidth/2, windowHeight/2,windowWidth, windowHeight);
-  textSize(100);
+  // Draw background image using windowWidth and windowHeight directly
+  image(nyc, windowWidth/2, windowHeight/2, windowWidth, windowHeight);
+  // Original code had a duplicate image call here, keeping it as-is.
+  image(nyc, windowWidth/2, windowHeight/2, windowWidth, windowHeight);
+  // Scale text size, stroke, and position for drawing
+  textSize(100 * scaleX);
   fill(255);
   stroke(0);
-  strokeWeight(5);
+  strokeWeight(5 * scaleX);
   textFont (pressStart);
   textAlign(CENTER);
-  text("YOU LOUSE", width/2, height/2);
+  text("YOU LOSE", width/2, height/2);
 }
 
 
-
+// Mouse pressed event handler
 function mousePressed() {
   if (stage == 0) {
     stage = 1;
@@ -542,18 +503,22 @@ function mousePressed() {
 }
 
 
-
+// Window resized event handler
 function windowResized() {
-  //backgroung image 
   resizeCanvas(windowWidth, windowHeight);
-  calculateImageDrawProps();
+  // Recalculate scaling factors when window is resized
+  scaleX = windowWidth / referenceWidth;
+  scaleY = windowHeight / referenceHeight;
+  calculateImageDrawProps(); // Update background image properties
+  // Update segment drawing properties to match new canvas size
   for (const segment of segments) {
     segment.calculateSegDrawProps();
   }
 }
 
+
+// Function to calculate background image drawing properties
 function calculateImageDrawProps() {
-//backgroung image 
   canvasAspectRatio = width / height;
 
   if (imgDrwPrps.aspect > canvasAspectRatio) {
@@ -576,25 +541,26 @@ function calculateImageDrawProps() {
 }
 
 
-
+// Class for image segments used in the mosaic background
 class ImageSegment {
-  //backgroung image 
   constructor(columnPositionInPrm, rowPostionInPrm  ,srcImgSegColourInPrm) {
     this.columnPosition = columnPositionInPrm;
     this.rowPostion = rowPostionInPrm;
-    this.srcImgSegColour = srcImgSegColourInPrm; // This color will be updated in draw()
+    this.srcImgSegColour = srcImgSegColourInPrm;
     this.drawXPos = 0;
     this.drawYPos = 0;
     this.drawWidth = 0;
     this.drawHeight = 0;
   }
+
+  // Calculates drawing properties for each segment based on the scaled background properties
   calculateSegDrawProps() {
-    //backgroung image 
     this.drawWidth = imgDrwPrps.width / numSegments;
     this.drawHeight = imgDrwPrps.height / numSegments;
     this.drawXPos = this.rowPostion * this.drawWidth + imgDrwPrps.xOffset;
     this.drawYPos = this.columnPosition * this.drawHeight + imgDrwPrps.yOffset;
   }
+
   drawMosaicSegment() {
     noStroke();
     fill(this.srcImgSegColour);
@@ -603,15 +569,8 @@ class ImageSegment {
 }
 
 
-
-//////game
-  function game (){
-
-  /**
- * The following lines were taken from Gemini. I require to solve the 
- * "magnet" problem. because the player couldnt left the platform, he was 
- * magnet stuck on them..
- */
+// Main game logic function
+function game (){
   const platformsArray = [
     {x: platform1X, y: platform1Y},
     {x: platform2X, y: platform2Y},
@@ -621,142 +580,153 @@ class ImageSegment {
     {x: platform6X, y: platform6Y}
   ];
 
-  let onPlatform = false; // Flag to check if player is currently on any platform
-
   for (let i = 0; i < platformsArray.length; i++) {
     let currentPlatformX = platformsArray[i].x;
     let currentPlatformY = platformsArray[i].y;
 
-    // MAIN CHANGE: Refined platform collision logic
-    // Check if player is horizontally aligned with the platform
-    if (playerX + playerWidth / 2 > currentPlatformX - platformWidth / 2 &&
-        playerX - playerWidth / 2 < currentPlatformX + platformWidth / 2) {
+    // Horizontal overlap check (using scaled coordinates for screen accuracy)
+    if (((playerX * scaleX) + (playerWidth * scaleX) / 2 > (currentPlatformX * scaleX) - (platformWidth * scaleX) / 2) &&
+        ((playerX * scaleX) - (playerWidth * scaleX) / 2 < (currentPlatformX * scaleX) + (platformWidth * scaleX) / 2)) {
 
-      // Check if player is falling AND their bottom is passing the platform's top
-      if (playerY + playerHeight / 2 >= currentPlatformY - platformHeight / 2 &&
-          playerY + playerHeight / 2 <= currentPlatformY - platformHeight / 2 + fallingSpeed) { // Check slightly below platform top
-        // Player has landed on the platform
-        playerY = currentPlatformY - platformHeight / 2 - playerHeight / 2; // Snap to top of platform
-        velocity = 0; // Stop vertical movement
-        jumpCunter = 0; // Reset jump counter
-        jump = false; // Ensure jump state is off
-        onPlatform = true; // Mark that player is on a platform
-        break; // Exit loop, player is on this platform
+        // CHANGE: Revised Platform landing logic using oldPlayerY for robust detection
+        let oldPlayerBottom = oldPlayerY + playerHeight / 2; // Player's bottom before gravity
+        let playerBottomCurrentFrame = playerY + playerHeight / 2; // Player's bottom after gravity
+        let platformTop = currentPlatformY - platformHeight / 2; // Platform's top in unscaled units
 
-  // Ensure gravity continues if not on any platform
-  // This part is handled by the gravity function, but it's good to note that
-  // if onPlatform is false, then gravity should apply.
-      }
+        // Check if player was above the platform last frame AND is now below/at platform top
+        // (meaning they just landed) AND they are not actively trying to jump upwards
+        if (oldPlayerBottom <= platformTop &&
+            playerBottomCurrentFrame >= platformTop &&
+            !jump) { // This condition implies falling onto the platform
+
+            playerY = platformTop - playerHeight / 2; // Snap player to the platform's top (unscaled Y)
+            jumpCunter = 0; // Reset jump counter
+            jump = false; // Player is no longer jumping
+            velocity = 0; // Stop vertical movement
+            break; // Player has landed, no need to check other platforms
+        }
+    }
+    // Platform horizontal barrier collisions (hitting head on platform bottom)
+    // Scale all values for collision detection. This logic remains the same.
+    // It correctly forces a fall if hitting the underside of a platform.
+    if ((playerX * scaleX) >= (platform1X * scaleX) - (platformWidth * scaleX)/2 &&
+        (playerX * scaleX) <= (platform1X * scaleX) + (platformWidth * scaleX)/2 &&
+        (playerY * scaleY) + (playerHeight * scaleY)/2 >= (barrier1Y * scaleY) - (barrierHeight * scaleY)/2 &&
+        (playerY * scaleY) - (playerHeight * scaleY)/2 <= (barrier1Y * scaleY) + (barrierHeight * scaleY)/2){
+      jumpCunter = jumpPower; // jumpPower is an absolute value used in gravity
+      velocity = fallingSpeed; // This causes the player to fall if they hit the underside
     }
 
-
-        //platform 1
-        if (playerX >= platform1X - platformWidth/2 &&
-          playerX <= platform1X + platformWidth/2 &&
-          playerY + playerHeight/2 >= barrier1Y - barrierHeight/2 &&
-          playerY - playerHeight/2 <= barrier1Y + barrierHeight/2){
-        jumpCunter = jumpPower;
-        velocity = fallingSpeed;
-      }
-  
-      //platform 2
-      if (playerX >= platform2X - platformWidth/2 &&
-        playerX <= platform2X + platformWidth/2 &&
-        playerY + playerHeight/2 >= barrier2Y - barrierHeight/2 &&
-        playerY - playerHeight/2 <= barrier2Y + barrierHeight/2){
-      jumpCunter = jumpPower;
-      velocity = fallingSpeed;
-    }
-  
-      //platform 3
-      if (playerX >= platform3X - platformWidth/2 &&
-        playerX <= platform3X + platformWidth/2 &&
-        playerY + playerHeight/2 >= barrier3Y - barrierHeight/2 &&
-        playerY - playerHeight/2 <= barrier3Y + barrierHeight/2){
-      jumpCunter = jumpPower;
-      velocity = fallingSpeed;
-    }
-  
-      //platform 4
-      if (playerX >= platform4X - platformWidth/2 &&
-        playerX <= platform4X + platformWidth/2 &&
-        playerY + playerHeight/2 >= barrier4Y - barrierHeight/2 &&
-        playerY - playerHeight/2 <= barrier4Y + barrierHeight/2){
-      jumpCunter = jumpPower;
-      velocity = fallingSpeed;
-    }
-  
-    //platform 5
-    if (playerX >= platform5X - platformWidth/2 &&
-      playerX <= platform5X + platformWidth/2 &&
-      playerY + playerHeight/2 >= barrier5Y - barrierHeight/2 &&
-      playerY - playerHeight/2 <= barrier5Y + barrierHeight/2){
+    // platform 2 barrier
+    if ((playerX * scaleX) >= (platform2X * scaleX) - (platformWidth * scaleX)/2 &&
+      (playerX * scaleX) <= (platform2X * scaleX) + (platformWidth * scaleX)/2 &&
+      (playerY * scaleY) + (playerHeight * scaleY)/2 >= (barrier2Y * scaleY) - (barrierHeight * scaleY)/2 &&
+      (playerY * scaleY) - (playerHeight * scaleY)/2 <= (barrier2Y * scaleY) + (barrierHeight * scaleY)/2){
     jumpCunter = jumpPower;
     velocity = fallingSpeed;
   }
-  
-    //platform 6
-    if (playerX >= platform6X - platformWidth/2 &&
-      playerX <= platform6X + platformWidth/2 &&
-      playerY + playerHeight/2 >= barrier6Y - barrierHeight/2 &&
-      playerY - playerHeight/2 <= barrier6Y + barrierHeight/2){
+
+    // platform 3 barrier
+    if ((playerX * scaleX) >= (platform3X * scaleX) - (platformWidth * scaleX)/2 &&
+      (playerX * scaleX) <= (platform3X * scaleX) + (platformWidth * scaleX)/2 &&
+      (playerY * scaleY) + (playerHeight * scaleY)/2 >= (barrier3Y * scaleY) - (barrierHeight * scaleY)/2 &&
+      (playerY * scaleY) - (playerHeight * scaleY)/2 <= (barrier3Y * scaleY) + (barrierHeight * scaleY)/2){
     jumpCunter = jumpPower;
     velocity = fallingSpeed;
   }
-  
-    }
-    if (score >= 7){
+
+    // platform 4 barrier
+    if ((playerX * scaleX) >= (platform4X * scaleX) - (platformWidth * scaleX)/2 &&
+      (playerX * scaleX) <= (platform4X * scaleX) + (platformWidth * scaleX)/2 &&
+      (playerY * scaleY) + (playerHeight * scaleY)/2 >= (barrier4Y * scaleY) - (barrierHeight * scaleY)/2 &&
+      (playerY * scaleY) - (playerHeight * scaleY)/2 <= (barrier4Y * scaleY) + (barrierHeight * scaleY)/2){
+    jumpCunter = jumpPower;
+    velocity = fallingSpeed;
+  }
+
+  // platform 5 barrier
+  if ((playerX * scaleX) >= (platform5X * scaleX) - (platformWidth * scaleX)/2 &&
+    (playerX * scaleX) <= (platform5X * scaleX) + (platformWidth * scaleX)/2 &&
+    (playerY * scaleY) + (playerHeight * scaleY)/2 >= (barrier5Y * scaleY) - (barrierHeight * scaleY)/2 &&
+    (playerY * scaleY) - (playerHeight * scaleY)/2 <= (barrier5Y * scaleY) + (barrierHeight * scaleY)/2){
+  jumpCunter = jumpPower;
+  velocity = fallingSpeed;
+}
+
+  // platform 6 barrier
+  if ((playerX * scaleX) >= (platform6X * scaleX) - (platformWidth * scaleX)/2 &&
+    (playerX * scaleX) <= (platform6X * scaleX) + (platformWidth * scaleX)/2 &&
+    (playerY * scaleY) + (playerHeight * scaleY)/2 >= (barrier6Y * scaleY) - (barrierHeight * scaleY)/2 &&
+    (playerY * scaleY) - (playerHeight * scaleY)/2 <= (barrier6Y * scaleY) + (barrierHeight * scaleY)/2){
+  jumpCunter = jumpPower;
+  velocity = fallingSpeed;
+}
+
+  } // End of platformsArray loop
+
+  // Win/Lose conditions
+  if (score >= 7){
+    // Only play sound and change stage once
+    if (stage != 2) {
       winGameSound.play();
-      stage = 2; 
-    } else if (lives <= 0){
+      stage = 2;
+    }
+  } else if (lives <= 0){
+    // Only play sound and change stage once
+    if (stage != 3) {
       louseGameSound.play();
-      stage = 3; 
-    } else if (gameTime >= timeLimit){ 
+      stage = 3;
+    }
+  } else if (gameTime >= timeLimit){
+    // Only play sound and change stage once
+    if (stage != 3) {
       louseGameSound.play();
-      stage = 3; 
+      stage = 3;
+    }
   }
-
 }
 
 
-
-
-
-//////gravity
+// Gravity logic
 function gravity(){
+  // jumpPower and fallingSpeed are applied directly to playerY (unscaled)
   if (jump == true){
-    if (jumpCunter < jumpPower){ 
+    if (jumpCunter < jumpPower){
       playerY -= jumpPower;
-      jumpCunter++; 
+      jumpCunter++;
     } else {
-      jump = false; 
-      velocity = fallingSpeed; 
+      jump = false; // Player reaches max jump height, starts falling
+      velocity = fallingSpeed; // Set velocity to falling speed after jump peak
     }
-  } else {
-    // Apply falling if not jumping
-    if (playerY + playerHeight / 2 < minHeight) { 
-      playerY += fallingSpeed; 
-      velocity = fallingSpeed; 
-    } else {
-      // On the ground
-      playerY = minHeight - playerHeight / 2; 
-      velocity = 0; 
-      jumpCunter = 0; 
+  } else { // Player is not jumping (i.e., falling)
+    // Check if player is above ground, apply fallingSpeed, or snap to ground
+    if (playerY + playerHeight / 2 < minHeight) {
+      playerY += fallingSpeed;
+      velocity = fallingSpeed; // Set velocity to falling speed when falling
+    } else { // Player is on the ground
+      playerY = minHeight - playerHeight / 2; // Snap to unscaled ground position
+      // Ensure all relevant states are reset when on ground
+      velocity = 0; // Set velocity to 0 when on ground
+      jumpCunter = 0;
+      jump = false;
     }
   }
 
-  if (playerY < maxHeight) {
-    playerY = maxHeight;
-    if (jump) {
+  // maxHeight and player position check are based on unscaled values
+  if (playerY < maxHeight) { // If player is above max top height
+    playerY = maxHeight; // Snap player to unscaled maxHeight
+    if (jump) { // If still trying to jump, stop it
       jump = false;
-      velocity = fallingSpeed;
+      velocity = fallingSpeed; // Start falling if hit max height while jumping
     }
   }
-   //do not pass the window wall
-    if (playerX + playerWidth/2 >= windowWidth){
-        playerX = playerX - 2;
+
+  // Do not pass the window wall (Horizontal boundaries)
+  // PlayerX bounds checked against unscaled referenceWidth
+  if (playerX + playerWidth/2 >= referenceWidth){
+      playerX = referenceWidth - playerWidth/2; // Snap player to the right edge (unscaled)
   }
-    if (playerX - playerWidth/2 <= 0){
-        playerX = playerX + 2;
-  }
+  if (playerX - playerWidth/2 <= 0){
+    playerX = playerWidth/2; // Snap player to the left edge (unscaled)
+}
 }
