@@ -117,3 +117,9 @@ If these conditions are met and the player is not actively jumping upwards (!jum
 
 ## :pushpin: References
 
+>These videos were very helpful in making this project:
+>
+> - [Jason Erdreich](#https://www.youtube.com/watch?v=FZlpuQeCvlk&list=PLBDInqUM5B26FjwMMZqGDxqQr1kX5V9Ul&index=1)
+> - [Tech Head Online](#https://www.youtube.com/watch?v=enLvg0VTsAo)
+>
+><br>
