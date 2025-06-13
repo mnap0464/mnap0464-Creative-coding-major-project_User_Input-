@@ -34,4 +34,14 @@
 > <br>
 > 
 
-## :settings: Animation Approach
+## :mag: Animation Approach
+> 
+> <br>
+> 
+> - User Intercation: function mousePressed() and keyIsDown
+> - The basic design, interactions, and elements within have changed completely.
+> 
+> <br>
+> 
+
+## :pacman: References
