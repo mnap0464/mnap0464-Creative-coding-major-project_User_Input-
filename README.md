@@ -27,9 +27,11 @@
 >
 > Your mission is to collect all the **musical notes** :notes: so that Jhonny can realize his dream of becoming a Jazz musician in New York. 
 >
->But watch out for the **trombones** :trumpet:, because if they hit you the world will **slow down**, and you will lose a **life** and **time**. 
+>But watch out for the **trombones** :trumpet:, because if they hit you the world will **slow down** at 30 frames for a few seconds , and you will lose a **life** and **time**. 
 >
 >What are you waiting for?! Run to help Jhonny!!!
 > 
 > <br>
 > 
+
+## :settings: Animation Approach
