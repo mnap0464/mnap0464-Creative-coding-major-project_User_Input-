@@ -8,8 +8,8 @@
 - [Overview](#space_invader-overview)
 - [Interaction Instructions](#video_game-interaction-instructions)
 - [Animation Approach](#mag-animation-approach)
-- [References](#ghost-references)
 - [Technical Explanation](#wrench-technical-explanation)
+- [References](#pushpin-references)
 
 <br>
 <br>
