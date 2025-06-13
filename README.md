@@ -60,9 +60,13 @@
 
 The first time I saw the painting, the connection with Pac-man was more immediate. And after that moment I found more and more associations with different old school games, like Donkey Kong or Super Mario Bros Mini. I started by associating the colored squares of the painting with the dots that Pac-man has to eat in the game, and the larger squares with ghosts. Later I changed perspective and I arrived at the association first with Donkey Kong seeing that the larger squares reminded me of barrels and then finally I arrived at Super Mario Bros Mini, imagining the character jumping between the different levels of the painting.
 
-![Donkey Kong](assets/donkey-kong-game-card.png) Donkey Kong
+![Donkey Kong](assets/donkey-kong-game-card.png) 
+<br>
+Donkey Kong
 
-![Super Mario Bros ](assets/Super-Mario-Bros.jpg) Super Mario Bros Mini
+![Super Mario Bros ](assets/Super-Mario-Bros.jpg) 
+<br>
+Super Mario Bros Mini
 
 
 ![pac-man](assets/Pac-Man.png) 
